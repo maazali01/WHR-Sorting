@@ -1,0 +1,87 @@
+# =========================================
+# Node.js & General
+# =========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================================
+# Logs
+# =========================================
+logs
+*.log
+logs/*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# =========================================
+# Build Output
+# =========================================
+dist/
+build/
+.cache/
+.next/
+out/
+
+# =========================================
+# Editor & OS Files
+# =========================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# =========================================
+# Frontend (React, Vue, etc.)
+# =========================================
+/frontend/node_modules/
+/frontend/build/
+/frontend/.env
+/frontend/.env.local
+/frontend/.eslintcache
+/frontend/.parcel-cache
+/frontend/.vite/
+frontend/.turbo/
+frontend/.next/
+
+# =========================================
+# Backend (Express, Fastify, NestJS, etc.)
+# =========================================
+/backend/node_modules/
+/backend/dist/
+/backend/.env
+/backend/.env.local
+/backend/uploads/
+/backend/coverage/
+backend/*.sqlite
+backend/*.db
+
+# =========================================
+# Testing
+# =========================================
+coverage/
+*.lcov
+jest-cache/
+jest-html-reporters-*
+
+# =========================================
+# Temporary Files
+# =========================================
+*.tmp
+*.temp
+*.bak
+*.swp

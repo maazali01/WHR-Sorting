@@ -1,0 +1,20 @@
+/* #codebase: Modern Unauthorized Overlay */
+.unauthorized-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+  padding: 2.5rem 2rem;
+  max-width: 500px;
+  margin: 2.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeIn 0.7s;
+}
+@media (max-width: 600px) {
+  .unauthorized-container {
+    padding: 1.2rem 0.5rem;
+    margin: 1rem 0;
+  }
+}

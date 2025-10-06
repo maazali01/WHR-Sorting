@@ -1,0 +1,238 @@
+/* 2025 Modern Admin Dashboard */
+.dashboard-wrap {
+  font-family: "Inter", system-ui, sans-serif;
+  background: #ffffff; /* light neutral background */
+  color: #1e293b;
+}
+
+/* Header */
+.dashboard-header h1 {
+  font-size: 1.7rem;
+  font-weight: 350;
+  color: #0f172a;
+}
+.dashboard-header .sub {
+  color: #64748b;
+  margin-top: 4px;
+  font-size: 0.95rem;
+}
+
+/* Warning Banner */
+.warn {
+  background: #fef9c3;
+  color: #854d0e;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+/* KPI Cards */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.kpi-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+.kpi-title {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+.kpi-value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Charts Row */
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.card h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Lists Row */
+.lists-row {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.25rem;
+}
+@media (max-width: 1000px) {
+  .lists-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Orders Table */
+.orders-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.orders-table th,
+.orders-table td {
+  padding: 12px 16px;
+  text-align: left;
+}
+.orders-table thead {
+  background: #f1f5f9;
+}
+.orders-table th {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+.orders-table tbody tr {
+  border-top: 1px solid #e2e8f0;
+  transition: background 0.2s ease;
+}
+.orders-table tbody tr:hover {
+  background: #f9fafb;
+}
+.orders-table td {
+  font-size: 0.9rem;
+  color: #1e293b;
+}
+
+/* Status Badges */
+.status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #505050;
+  display: inline-block;
+}
+.status.delivered {
+  background: #16a34a;
+}
+.status.processing {
+  background: #f59e0b;
+}
+.status.shipped {
+  background: #3b82f6;
+}
+.status.cancelled {
+  background: #dc2626;
+}
+
+/* Container */
+.top-products {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Individual item */
+.top-products li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.top-products li:last-child {
+  border-bottom: none;
+}
+
+/* Hover effect */
+.top-products li:hover {
+  background: #f9fafb;
+  transform: translateX(2px);
+}
+
+/* Sold count */
+.top-products .sold {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* Highlight top 3 with gradient badges */
+.top-products li:nth-child(1) {
+  background: linear-gradient(90deg, #31c48d10 0%, #31c48d05 100%);
+  font-weight: 600;
+  position: relative;
+}
+.top-products li:nth-child(1)::before {
+  content: "🥇";
+  position: absolute;
+  left: 8px;
+  font-size: 1.2rem;
+}
+
+.top-products li:nth-child(2) {
+  background: linear-gradient(90deg, #3b82f610 0%, #3b82f605 100%);
+  font-weight: 600;
+  position: relative;
+}
+.top-products li:nth-child(2)::before {
+  content: "🥈";
+  position: absolute;
+  left: 8px;
+  font-size: 1.2rem;
+}
+
+.top-products li:nth-child(3) {
+  background: linear-gradient(90deg, #f59e0b10 0%, #f59e0b05 100%);
+  font-weight: 600;
+  position: relative;
+}
+.top-products li:nth-child(3)::before {
+  content: "🥉";
+  position: absolute;
+  left: 8px;
+  font-size: 1.2rem;
+}
+
+/* Add subtle badge on right */
+.top-products li span.badge {
+  background: #31c48d;
+  color: #ffffff;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 10px;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .dashboard-wrap {
+    padding: 1rem;
+  }
+}

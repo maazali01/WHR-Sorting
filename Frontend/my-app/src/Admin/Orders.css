@@ -1,0 +1,171 @@
+/* --- Container --- */
+.orders-container {
+  background: #ffffff;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* --- Title --- */
+.orders-title {
+  font-size: 1.7rem;
+  font-weight: 350;
+  color: #111827;
+  margin-bottom: 2rem;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orders-title::before {
+  font-size: 1.6rem;
+}
+
+/* --- Loading / Error --- */
+.orders-loading,
+.orders-error,
+.no-orders {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.orders-error {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* --- Orders Table --- */
+.orders-list {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(17, 24, 39, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+/* Header Row */
+.orders-header,
+.order-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 1.2fr 0.6fr 0.8fr 1fr 0.8fr 1fr;
+  padding: 1rem 1.25rem;
+  align-items: center;
+  font-size: 0.875rem;
+  transition: background 0.2s ease;
+}
+
+.orders-header {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Rows */
+.order-row {
+  border-bottom: 1px solid #f3f4f6;
+  background: white;
+}
+.order-row:nth-child(even) {
+  background: #fafafa;
+}
+
+.order-row:hover {
+  background: #f9f9f9;
+}
+
+/* --- Cells --- */
+.order-id {
+  font-size: 0.8rem;
+  color: #4b5563;
+  word-break: break-all;
+  font-family: monospace;
+}
+
+.order-items div,
+.order-quantities div {
+  font-size: 0.8rem;
+  color: #374151;
+}
+
+.order-total {
+  font-weight: 600;
+  color: #111827;
+}
+
+.order-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* --- Priority Select --- */
+.priority-select {
+  padding: 0.3rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.8rem;
+  background: #fff;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.priority-select:focus {
+  border-color: #31c48d;
+  box-shadow: 0 0 0 2px rgba(49, 196, 141, 0.2);
+  outline: none;
+}
+
+/* --- Status badges --- */
+.status-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Modern badge colors */
+.status-badge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+.status-badge.confirmed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.status-badge.completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* --- Button --- */
+.send-btn {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  background: #31c48d;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 0.8rem;
+}
+
+.send-btn:hover {
+  background: #28a17b;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(49, 196, 141, 0.3);
+}
+@media (max-width: 768px) {
+  .orders-header,
+  .order-row {
+    grid-template-columns: 1fr;
+    padding: 0.8rem;
+  }
+  .orders-header span {
+    display: none; /* hide header on mobile */
+  }
+}

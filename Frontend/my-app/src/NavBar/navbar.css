@@ -1,0 +1,239 @@
+
+/* Welcome text on Admin pages */
+.welcome-text {
+  color: #f8f8ec;       /* or #fff */
+  font-size: 1rem;
+  font-weight: 200;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.navbar-logo {
+  height: 44px;
+}
+.navbar-links {
+  display: flex;
+  gap: 2rem;
+}
+.navbar-link {
+  color: #fff;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+/* User Profile Dropdown */
+.user-profile {
+  position: relative;
+  margin-left: 20px;
+  margin-top: 4px;
+}
+
+.profile-icon {
+  font-size: 1.8rem;
+  color: #44bdb7;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.profile-icon:hover {
+  transform: scale(1.1);
+  color: #6ac7c3;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  background: #fff;
+  color: #21133a;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+  overflow: hidden;
+  animation: fadeIn 0.25s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.user-dropdown button {
+  background: none;
+  border: none;
+  color: #21133a;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.2rem;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.user-dropdown button:hover {
+  color: #d41616;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0;
+  }
+  .navbar-links {
+    gap: 1rem;
+  }
+}
+
+/* Existing styles for reference */
+/* navbar.css */
+.navBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #21133a;
+    padding: 5px 10px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    border: #242424;
+  }
+  
+  .navBar .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navBar .logo img {
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .links {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+  }
+  
+  .links .link {
+    padding: 0 15px;
+    margin-top: 5px;
+  }
+  .user-dropdown {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.7rem 1rem;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-link:hover {
+  background: #f3f4f6;
+}
+
+  
+  .links .link a {
+    color: #939796;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    padding: 5px 10px;
+  }
+  
+  .links .link a:hover {
+    color: #03f3e9;
+    border-radius: 8px;
+  }
+  
+  .link {
+    border: none;
+  }
+  
+  /* Styles for Search Dropdown */
+  .SearchContainer {
+    position: relative;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    transition: width 0.4s ease-in-out;
+    margin-right: 15px;
+    overflow: hidden;
+  }
+  
+  .SearchIcon {
+    position: absolute;
+    right: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 3; /* Ensure icon is above the dropdown */
+  }
+  
+  .SearchInput {
+    width: 100%;
+    height: 100%;
+    padding: 0 35px 0 15px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    background-color: #292929;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+    &:focus {
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .SearchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    z-index: 2; /* Ensure dropdown is above other content */
+  }
+  
+  .SearchResultItem {
+    padding: 10px;
+    border-bottom: 1px solid #222222;
+    cursor: pointer;
+  
+    &:last-child {
+      border-bottom: none;
+    }
+  
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }

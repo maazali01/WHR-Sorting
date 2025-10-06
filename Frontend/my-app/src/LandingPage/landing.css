@@ -1,0 +1,128 @@
+/* #codebase: Modern Landing Page */
+
+.landing {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  background: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem 8%;
+  background: linear-gradient(135deg, #21133a 0%,#03f3e9  100%);
+  color: white;
+  flex-wrap: wrap;
+}
+.hero-content {
+  flex: 1;
+  min-width: 300px;
+  max-width: 550px;
+  animation: fadeInUp 1s ease;
+}
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: 150;
+  line-height: 1.6;
+}
+.cta-btn {
+  padding: 0.9rem 2rem;
+  background: white;
+  color: #21133a;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+.cta-btn:hover {
+  background: #21133a;
+  color: white;
+  transform: scale(1.05);
+}
+.hero-image img {
+  max-width: 420px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 1.2s ease;
+}
+
+/* Features Section */
+.features {
+  padding: 3rem 8%;
+  text-align: center;
+  background: #fff;
+}
+.features h2 {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  color: #21133a;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 2rem;
+}
+.feature-card {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feature-card i {
+  font-size: 2rem;
+  color: #21133a;
+  margin-bottom: 1rem;
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: #21133a;
+  color: #eee;
+  font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .hero-content {
+    max-width: 100%;
+    margin-bottom: 2rem;
+  }
+  .hero-image img {
+    max-width: 300px;
+  }
+}

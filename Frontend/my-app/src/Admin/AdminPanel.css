@@ -1,0 +1,49 @@
+/* === Layout container === */
+.admin-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* === Main content area === */
+.admin-content {
+  margin-left: 240px; /* default sidebar width */
+  padding: 2rem;
+  width: calc(100% - 240px);
+  background: #ffffff;
+  min-height: 100vh;
+  overflow-y: auto;
+  animation: fadeIn 0.5s ease-in-out;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* When sidebar collapsed → content full width */
+.admin-content.full-width {
+  margin-left: 60px; /* collapsed width of sidebar */
+  width: calc(100% - 60px);
+}
+
+/* Example screen headers */
+.admin-content h1 {
+  color: #21133a;
+  margin-bottom: 1.5rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+  }
+}
+
+/* Optional fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

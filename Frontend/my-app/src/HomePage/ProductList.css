@@ -1,0 +1,124 @@
+/* User Product List (styled similar to admin cards) */
+.user-product-list {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.product-heading {
+  font-size: 2rem;                /* slightly bigger heading */
+  font-weight: 300;               /* bold & modern */
+  text-align: center;             /* center aligned */
+  color: #111827;                 /* neutral dark text */
+  margin-bottom: 2rem;            /* good spacing below heading */
+  letter-spacing: -0.5px;         /* tighter modern spacing */
+  line-height: 1.2;
+  position: relative;             /* for the underline */
+}
+
+/* optional subtle underline accent */
+.product-heading::after {
+  content: "";
+  display: block;
+  width: 60px;                    /* small underline */
+  height: 3px;
+  background: #7549c4;            /* accent color */
+  margin: 0.6rem auto 0;           /* center under heading */
+  border-radius: 2px;
+}
+
+.user-product-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.09);
+  padding: 1.5rem 1rem;
+  transition: box-shadow 0.3s, transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.7s;
+}
+
+.user-product-card:hover {
+  box-shadow: 0 8px 32px rgba(79, 140, 255, 0.18);
+  transform: translateY(-4px);
+}
+
+.user-product-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.user-product-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Name & Price in one line */
+.user-product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-product-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.user-product-price {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #af0000;
+}
+
+/* Category just below the name, aligned left */
+.user-category-tag {
+  background: #e4e4ff;
+  color: #5b389d;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  align-self: flex-start; /* left align */
+}
+
+/* Add to Cart button centered */
+.user-add-to-cart-btn {
+  margin-top: auto;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  color: rgb(149, 149, 149);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.user-product-description {
+  font-size: 0.85rem;
+  color: #555;
+  flex-grow: 1;
+}
+.user-add-to-cart-btn:hover {
+  background-color: #656565;
+  color: rgb(217, 217, 217);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

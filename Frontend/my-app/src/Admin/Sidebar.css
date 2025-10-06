@@ -1,0 +1,182 @@
+/* === Sidebar Base === */
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.05);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+/* Collapsed sidebar */
+.admin-sidebar.collapsed {
+  width: 60px;
+}
+
+/* Toggle button at the top */
+.toggle-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  background: #f9f9f9;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Nav links - now stick directly under toggle button */
+.admin-sidebar nav {
+  flex-grow: 1; /* pushes bottom section to bottom */
+}
+
+.admin-sidebar nav ul {
+  list-style: none;
+  padding: 0.5rem 0; /* small padding under toggle */
+  margin: 0;
+}
+
+.admin-sidebar nav ul li {
+  margin-bottom: 0.4rem;
+}
+
+.admin-sidebar nav ul li a {
+  color: #3a414b;
+  font-size: 0.9rem;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.2s ease;
+}
+
+.admin-sidebar nav ul li a:hover {
+  background: #f3f4f6;
+  color: #929292;
+}
+
+.admin-sidebar nav ul li a.active {
+  background: #e1dde8;
+  color: #4a4a4a;
+}
+
+/* Hide text in collapsed state */
+.admin-sidebar.collapsed .link-text {
+  display: none;
+}
+
+/* === Bottom Section === */
+.bottom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+/* Hide logout when collapsed */
+.admin-sidebar.collapsed .logout-section {
+  display: none;
+}
+
+/* Logout Button */
+.logout-btn {
+  width: 100%;
+  background: none;
+  color: #ce2a2a;
+  border: 0.5px solid #d4d4d4;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
+}
+
+/* Admin Profile */
+.admin-profile {
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+/* Website name behind toggle button */
+.sidebar-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4b2c81; /* same purple theme as avatar */
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Hide title when collapsed */
+.admin-sidebar.collapsed .sidebar-title {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  overflow: hidden;
+}
+
+.admin-profile:hover {
+  background: #f9fafb;
+  transform: translateY(-1px);
+}
+
+/* Avatar */
+.admin-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin-right: 0.6rem;
+  background: #4b2c81;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* Profile text */
+.profile-info h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.profile-info p {
+  margin: 0;
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+/* Hide profile text when collapsed */
+.admin-sidebar.collapsed .profile-info {
+  display: none;
+}
+
+/* Center avatar properly when collapsed */
+.admin-sidebar.collapsed .admin-avatar {
+  margin: 0 auto;
+}

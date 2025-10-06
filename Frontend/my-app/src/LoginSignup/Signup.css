@@ -1,0 +1,78 @@
+
+
+/* Card */
+.signup-card {
+  background-color: #ffffff;
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  color: #333;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Title & subtitle */
+.signup-title {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #000;
+}
+
+.signup-subtitle {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 1.2rem;
+}
+
+/* Form */
+.signup-form {
+  text-align: left;
+}
+
+.signup-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.signup-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f9f9f9;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.signup-input:focus {
+  outline: none;
+  border-color: #1b1750;
+  background: #fff;
+}
+
+/* Error */
+.signup-error {
+  color: #ff4d4d;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+/* Submit button */
+.signup-submit {
+  width: 100%;
+  padding: 12px;
+  background: #301d52;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.signup-submit:hover {
+  background: #201336;
+}

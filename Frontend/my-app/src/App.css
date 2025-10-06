@@ -1,0 +1,61 @@
+/* ==== Base Reset ==== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ==== Global Variables ==== */
+:root {
+  --primary-color: #21133a;
+  --secondary-color: #f8f9fa;
+  --accent-color: #503087;
+  --danger-color: #cd4b27;
+  --success-color: #27cd2f;
+  --text-color: #333;
+
+  --border-radius: 12px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 6px 24px rgba(0, 0, 0, 0.18);
+
+  --transition: 0.25s ease;
+}
+
+/* ==== Body & Typography ==== */
+body {
+  background: var(--secondary-color);
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ==== Utilities ==== */
+.flex { display: flex; gap: 1rem; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.grid { display: grid; gap: 1.5rem; }
+
+.rounded { border-radius: var(--border-radius); }
+.shadow { box-shadow: var(--shadow-md); }
+
+.mt-2 { margin-top: 2rem; }
+.mb-2 { margin-bottom: 2rem; }
+.p-2 { padding: 2rem; }
+
+/* ==== Animations ==== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+.fade-in { animation: fadeIn 0.6s ease; }
+
+/* ==== Scrollbar ==== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 8px;
+}
