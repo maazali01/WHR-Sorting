@@ -4,8 +4,9 @@ import Cookies from 'js-cookie';
 import Skeleton from '../Loader/loader';
 import { FiCheckCircle, FiAlertCircle, FiBookOpen, FiCpu } from 'react-icons/fi';
 import './AIModels.css';
+import API_URL from '../config/api';
 
-const API = 'http://localhost:4000/admin/ai-models';
+const API = `${API_URL}/admin/ai-models`;
 
 const AIModels = () => {
   const [models, setModels] = useState([]);

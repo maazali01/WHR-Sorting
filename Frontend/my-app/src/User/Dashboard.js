@@ -7,6 +7,8 @@ import {
   FiUser, FiMail, FiLock, FiEdit2, FiX, FiCheck, FiPackage, 
   FiClock, FiDollarSign, FiAlertCircle, FiShield, FiActivity 
 } from 'react-icons/fi';
+import './UserDashboard.css';
+import './UserComponents.css';
 import API_URL from '../config/api';
 
 const API = `${API_URL}/user`;

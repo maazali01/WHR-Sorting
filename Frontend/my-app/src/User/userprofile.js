@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserComponents.css';
+import API_URL from '../config/api';
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:4000/user/profile', { withCredentials: true });
+        const res = await axios.get(`${API_URL}/user/profile`, { withCredentials: true });
         setFormData({
           username: res.data.username,
           email: res.data.email,
@@ -38,7 +39,7 @@ const EditProfile = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:4000/user/profile', formData, { withCredentials: true });
+      await axios.put(`${API_URL}/user/profile`, formData, { withCredentials: true });
       setSuccessMsg('Profile updated successfully.');
       setErrorMsg('');
     } catch (err) {

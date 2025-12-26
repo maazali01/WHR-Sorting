@@ -4,6 +4,7 @@ import axios from "axios";
 import { FiPlus, FiX, FiPackage, FiEdit2, FiTrash2 } from "react-icons/fi";
 import Skeleton from "../Loader/loader";
 import "./ProductList.css";
+import API_URL from '../config/api';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -29,7 +30,7 @@ const ProductList = () => {
   const fetchProducts = useCallback(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4000/admin/products", {
+      .get(`${API_URL}/admin/products`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -51,7 +52,7 @@ const ProductList = () => {
   // ---------- ADD ----------
   const handleAddProduct = () => {
     axios
-      .post("http://localhost:4000/admin/products", newProduct, {
+      .post(`${API_URL}/admin/products`, newProduct, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -76,7 +77,7 @@ const ProductList = () => {
   const handleDeleteProduct = () => {
     if (!productToDelete) return;
     axios
-      .delete(`http://localhost:4000/admin/products/${productToDelete._id}`, {
+      .delete(`${API_URL}/admin/products/${productToDelete._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -93,7 +94,7 @@ const ProductList = () => {
   const handleUpdateProduct = () => {
     axios
       .put(
-        `http://localhost:4000/admin/products/${editProduct._id}`,
+        `${API_URL}/admin/products/${editProduct._id}`,
         editProduct,
         { headers: { Authorization: `Bearer ${token}` } }
       )

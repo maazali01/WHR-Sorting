@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import './CheckoutPage.css';
+import API_URL from '../config/api';
 
 const CheckoutPage = () => {
   const { cart, getTotal, clearCart } = useCart();
@@ -31,7 +32,7 @@ const CheckoutPage = () => {
     // ✅ Validate stock availability before checkout
     try {
       const stockCheckPromises = cart.map(async (item) => {
-        const res = await axios.get(`http://localhost:4000/user/products/${item._id}`);
+        const res = await axios.get(`${API_URL}/user/products/${item._id}`);
         const product = res.data;
         
         if (product.quantity < item.quantity) {
@@ -81,7 +82,7 @@ const CheckoutPage = () => {
     };
 
     try {
-      const res = await axios.post('http://localhost:4000/user/orders', orderData, {
+      const res = await axios.post(`${API_URL}/user/orders`, orderData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

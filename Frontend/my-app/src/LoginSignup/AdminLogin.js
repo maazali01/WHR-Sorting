@@ -5,6 +5,7 @@ import './AdminLogin.css';
 import Cookie from 'js-cookie';
 import Alert from './popup/view/popup';
 import { FiLock, FiUser, FiShield, FiEye, FiEyeOff } from 'react-icons/fi';
+import API_URL from '../config/api';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -28,7 +29,7 @@ const AdminLogin = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:4000/login',
+        `${API_URL}/login`,
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );

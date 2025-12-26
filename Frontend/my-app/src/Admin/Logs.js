@@ -3,8 +3,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { FiFileText, FiDownload, FiAlertCircle } from "react-icons/fi";
 import "./Logs.css";
+import API_URL from '../config/api';
 
-const API = "http://localhost:4000/admin";
+const API = `${API_URL}/admin`;
 
 const Logs = () => {
   const [logs, setLogs] = useState([]);

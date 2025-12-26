@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { CartContext } from './Cartcontext';
 import './ProductList.css';
+import API_URL from '../config/api';
 
 const UserProductList = ({ searchTerm, onSearchChange }) => {
   const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ const UserProductList = ({ searchTerm, onSearchChange }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/user/products');
+        const response = await axios.get(`${API_URL}/user/products`);
         setProducts(response.data && Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Error fetching products:', error);

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Navigate, Link } from 'react-router-dom';
 import './Signup.css';
-import Alert from './popup/view/popup'; // your Alert.js
+import Alert from './popup/view/popup';
+import API_URL from '../config/api';
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
@@ -35,7 +36,7 @@ const SignUpPage = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:4000/register', {
+      const response = await axios.post(`${API_URL}/register`, {
         username,
         email,
         password,

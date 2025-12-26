@@ -135,7 +135,7 @@ router.post("/send-to-webots/:id", async (req, res) => {
     const token = req.headers.authorization;
     
     const response = await axios.post(
-      `http://localhost:4000/webots/send-order/${id}`,
+      `http://${API_URL}/webots/send-order/${id}`,
       { priority },
       { headers: { Authorization: token } }
     );

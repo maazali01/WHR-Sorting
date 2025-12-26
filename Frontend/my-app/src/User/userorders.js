@@ -4,8 +4,9 @@ import Cookies from 'js-cookie';
 import Skeleton from '../Loader/loader';
 import './UserOrders.css';
 import { FiPackage, FiClock, FiDollarSign, FiX } from 'react-icons/fi';
+import API_URL from '../config/api';
 
-const API = 'http://localhost:4000/user';
+const API = `${API_URL}/user`;
 
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);

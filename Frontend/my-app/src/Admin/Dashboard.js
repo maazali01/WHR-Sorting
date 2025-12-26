@@ -21,8 +21,9 @@ import {
   FiPackage, FiShoppingCart, FiDollarSign, FiUsers, 
   FiTrendingUp, FiActivity, FiAlertCircle 
 } from "react-icons/fi";
+import API_URL from '../config/api';
 
-const API_BASE = "http://localhost:4000/admin";
+const API_BASE = `${API_URL}/admin`;
 
 const Dashboard = () => {
   const [analytics, setAnalytics] = useState(null);

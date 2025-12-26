@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { FiPackage, FiClock, FiCheckCircle, FiAlertCircle, FiTrendingUp, FiSearch, FiFilter, FiCalendar, FiUser, FiDollarSign, FiTrash2, FiX } from "react-icons/fi";
 import "./Orders.css";
+import API_URL from '../config/api';
 
 const Orders = () => {
 	const [orders, setOrders] = useState([]);
@@ -33,21 +34,17 @@ const Orders = () => {
 		const fetchOrders = async () => {
 			try {
 				const headers = { Authorization: `Bearer ${token}` };
-				// Get the list (may be summary)
-				const res = await axios.get("http://localhost:4000/admin/orders", { headers });
+				const res = await axios.get(`${API_URL}/admin/orders`, { headers });
 				const list = Array.isArray(res.data) ? res.data : [];
 
-				// For any order missing items or user, fetch detailed version in parallel
 				const detailPromises = list.map(async (o) => {
-					// if items/user present, keep as-is
 					if ((Array.isArray(o.items) && o.items.length > 0) || (o.user && (o.user.username || o.user.email))) {
 						return o;
 					}
 					try {
-						const det = await axios.get(`http://localhost:4000/admin/orders/${o._id}`, { headers });
+						const det = await axios.get(`${API_URL}/admin/orders/${o._id}`, { headers });
 						return det.data || o;
 					} catch (err) {
-						// fallback to original order on error
 						console.debug(`Order detail fetch failed for ${o._id}:`, err?.message || err);
 						return o;
 					}
@@ -129,7 +126,7 @@ const Orders = () => {
     setDeletingOrderId(orderId);
 
     try {
-      await axios.delete(`http://localhost:4000/admin/orders/${orderId}`, {
+      await axios.delete(`${API_URL}/admin/orders/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

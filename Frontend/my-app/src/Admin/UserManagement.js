@@ -3,8 +3,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import "./UserManagement.css";
 import { FiUsers, FiTrash2, FiAlertCircle } from "react-icons/fi";
+import API_URL from '../config/api';
 
-const API = "http://localhost:4000/admin";
+const API = `${API_URL}/admin`;
 
 const UserManagement = () => {
   const [localUsers, setLocalUsers] = useState([]);

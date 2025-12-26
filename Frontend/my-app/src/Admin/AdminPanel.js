@@ -5,6 +5,7 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import './AdminPanel.css';
+import API_URL from '../config/api';
 
 const AdminPanel = () => {
   const [error, setError] = useState(null);
@@ -27,7 +28,7 @@ const AdminPanel = () => {
 
     const fetchProducts = async () => {
       try {
-        await axios.get('http://localhost:4000/admin/products');
+        await axios.get(`${API_URL}/admin/products`);
         setError(null);
       } catch (error) {
         console.error('Error fetching products:', error);
