@@ -10,8 +10,9 @@ import {
   FiClock, FiZap, FiTruck, FiCheckCircle, FiAlertTriangle, FiAlertCircle 
 } from "react-icons/fi";
 import './Analytics.css';
+import API_URL from '../config/api';
 
-const API = "http://localhost:4000/admin";
+const API = `${API_URL}/admin`;
 
 const Analytics = () => {
   const [data, setData] = useState(null);

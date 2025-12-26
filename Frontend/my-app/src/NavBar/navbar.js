@@ -5,9 +5,9 @@ import { FiShoppingCart, FiGrid, FiHome } from 'react-icons/fi';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { CartContext } from '../HomePage/Cartcontext';
-import {  logout } from '../utils/auth';
+import { logout } from '../utils/auth';
 import './navbar.css';
-import logo from './logo.png';
+import API_URL from '../config/api';
 
 const Navbar = () => {
   const [logged, setLogged] = useState(false);
@@ -22,7 +22,6 @@ const Navbar = () => {
 
   const isAdminRoute = location.pathname.startsWith("/admin");
 
-  // replace initial auth handler with verified token -> profile check
   useEffect(() => {
     let mounted = true;
 
@@ -38,7 +37,7 @@ const Navbar = () => {
       }
 
       try {
-        const res = await axios.get('http://localhost:4000/user/profile', {
+        const res = await axios.get(`${API_URL}/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!mounted) return;
@@ -46,7 +45,6 @@ const Navbar = () => {
         setUsername(res.data?.username || res.data?.email || '');
         setUserRole(res.data?.role || 'user');
       } catch (err) {
-        // token invalid or server error -> treat as logged out
         if (!mounted) return;
         Cookies.remove('token');
         setLogged(false);
@@ -55,7 +53,6 @@ const Navbar = () => {
       }
     };
 
-    // run initially and when authChanged event fired
     verifyAndLoadProfile();
     const handler = () => verifyAndLoadProfile();
     window.addEventListener('authChanged', handler);
@@ -65,7 +62,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // lightweight token-presence update on route change (avoid using isLoggedIn())
   useEffect(() => {
     const token = Cookies.get('token');
     setLogged(Boolean(token));
@@ -99,7 +95,7 @@ const Navbar = () => {
     <nav className="navBar">
       <div className="logo">
         <Link to="/" onClick={() => setMenuOpen(false)}>
-          <img src={logo} alt="Logo" />
+          <img src="/logo.jpg" alt="Logo" />
         </Link>
       </div>
 

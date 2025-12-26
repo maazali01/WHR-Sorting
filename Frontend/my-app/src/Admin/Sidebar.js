@@ -18,6 +18,7 @@ import { logout } from "../utils/auth";
 import axios from "axios";
 import Cookies from "js-cookie";
 import "./Sidebar.css";
+import API_URL from '../config/api';
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
   const [username, setUsername] = useState("");
@@ -29,7 +30,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       try {
         const token = Cookies.get("token");
         if (!token) return;
-        const res = await axios.get("http://localhost:4000/user/profile", {
+        const res = await axios.get(`${API_URL}/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!cancelled)

@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Login.css';
 import Cookie from 'js-cookie';
 import Alert from './popup/view/popup';
+import API_URL from '../config/api';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -30,7 +31,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:4000/login',
+        `${API_URL}/login`,
         { username: username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -62,7 +63,7 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:4000/auth/google';
+    window.location.href = `${API_URL}/auth/google`;
   };
 
   // If backend redirected here after Google OAuth with token in URL, handle it

@@ -7,8 +7,9 @@ import {
   FiUser, FiMail, FiLock, FiEdit2, FiX, FiCheck, FiPackage, 
   FiClock, FiDollarSign, FiAlertCircle, FiShield, FiActivity 
 } from 'react-icons/fi';
+import API_URL from '../config/api';
 
-const API = 'http://localhost:4000/user';
+const API = `${API_URL}/user`;
 
 const UserDashboard = () => {
   const [profile, setProfile] = useState(null);
