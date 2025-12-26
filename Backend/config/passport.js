@@ -4,14 +4,14 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/Users');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'Yooo-JWT-Token';
+const JWT_SECRET = process.env.JWT_SECRET ;
 
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID, // add in .env
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:4000/auth/google/callback',
+      callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:4000/auth/google/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

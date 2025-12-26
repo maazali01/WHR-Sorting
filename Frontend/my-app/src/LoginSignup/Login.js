@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import './Login.css';
 import Cookie from 'js-cookie';
-import Alert from './popup/view/popup'; // your Alert.js
+import Alert from './popup/view/popup';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [alerts, setAlerts] = useState([]); // array of alerts
+  const [alerts, setAlerts] = useState([]);
   const navigate = useNavigate();
 
   const addAlert = (alert) => {
@@ -35,14 +35,27 @@ const LoginPage = () => {
         { headers: { 'Content-Type': 'application/json' } }
       );
 
-      const { user } = response.data;
-      Cookie.set('token', response.data.token);
+      const { user, token } = response.data;
+
+      // ✅ Redirect admins to admin login page
+      if (user.role === 'admin') {
+        addAlert({ type: 'warning', title: 'Admin Access', message: 'Please use the Admin Portal to login.' });
+        setTimeout(() => {
+          navigate('/admin/login');
+        }, 2000);
+        return;
+      }
+
+      Cookie.set('token', token, { path: '/', sameSite: 'lax', expires: 1 / 24 });
+      localStorage.setItem('token', token);
+
+      axios.defaults.withCredentials = true;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      try { window.dispatchEvent(new Event('authChanged')); } catch (e) {}
 
       addAlert({ type: 'success', title: 'Login Successful', message: 'Redirecting you to the dashboard...' });
-      setTimeout(() => {
-        if (user.role === 'admin') navigate('/admin/dashboard', { state: user });
-        else navigate('/home');
-      }, 2000);
+      navigate('/home');
     } catch (error) {
       addAlert({ type: 'error', title: 'Login Failed', message: 'Invalid username or password.' });
     }
@@ -51,6 +64,55 @@ const LoginPage = () => {
   const handleGoogleLogin = () => {
     window.location.href = 'http://localhost:4000/auth/google';
   };
+
+  // If backend redirected here after Google OAuth with token in URL, handle it
+  useEffect(() => {
+    try {
+      const parseFromLocation = () => {
+        const q = new URLSearchParams(window.location.search);
+        let token = q.get('token') || q.get('access_token');
+        const role = q.get('role') || q.get('userRole') || null;
+        const redirectTo = q.get('redirect') || null;
+
+        // also check hash fragment (#token=...) if backend used fragment
+        if (!token && window.location.hash) {
+          const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+          token = token || hash.get('token') || hash.get('access_token');
+        }
+
+        return { token, role, redirectTo };
+      };
+
+      const { token, role, redirectTo } = parseFromLocation();
+      if (token) {
+        // persist token (cookie + localStorage) and set axios
+        Cookie.set('token', token, { path: '/', sameSite: 'lax', expires: 1 / 24 });
+        localStorage.setItem('token', token);
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        try { window.dispatchEvent(new Event('authChanged')); } catch (e) {}
+
+        // remove token from URL to avoid exposing it
+        const url = new URL(window.location.href);
+        url.searchParams.delete('token');
+        url.searchParams.delete('access_token');
+        url.searchParams.delete('role');
+        url.searchParams.delete('redirect');
+        window.history.replaceState({}, document.title, url.pathname + url.search);
+
+        // navigate based on role or redirect param
+        if (redirectTo) {
+          navigate(redirectTo);
+        } else if (role === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/home');
+        }
+      }
+    } catch (err) {
+      console.warn('OAuth redirect handling failed:', err);
+    }
+  }, [navigate]);
 
   return (
     <>
@@ -109,7 +171,9 @@ const LoginPage = () => {
 
         <div className="auth-links">
           <Link to="/forgot-password">Forgot Password?</Link>
-          <p>New user? <Link to="/signup">Create an account</Link></p>
+          <p>
+            New user? <Link to="/signup">Create an account</Link>
+          </p>
         </div>
       </div>
     </>

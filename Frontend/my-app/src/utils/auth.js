@@ -1,12 +1,32 @@
 // src/utils/auth.js
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 export const isLoggedIn = () => {
-  return !!Cookie.get("token");
+  const cookieToken = Cookies.get("token");
+  const lsToken = localStorage.getItem("token");
+
+  // return true only if we have a non-empty token in either storage
+  return !!(cookieToken && cookieToken.trim()) || !!(lsToken && lsToken.trim());
 };
 
 export const logout = (clearCart) => {
-  Cookie.remove("token");
-  if (clearCart) clearCart(); // pass CartContext.clearCart when available
-  window.location.href = "/login"; // redirect after logout
+  Cookies.remove("token", { path: "/" });
+  localStorage.removeItem("token");
+  
+  // clear axios auth header
+  delete axios.defaults.headers.common['Authorization'];
+  
+  if (typeof clearCart === "function") {
+    try { clearCart(); } catch (e) {}
+  }
+  
+  // notify UI
+  try {
+    window.dispatchEvent(new Event("authChanged"));
+  } catch (e) {
+    /* ignore */
+  }
+  
+  // Do NOT auto-redirect here - let caller handle navigation
 };

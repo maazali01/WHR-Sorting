@@ -4,6 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { CartProvider } from './HomePage/Cartcontext';
+import axios from 'axios';
+import Cookie from 'js-cookie';
+
+// Ensure axios sends cookies and include Authorization header when token present
+axios.defaults.withCredentials = true;
+const bootstrapToken = Cookie.get('token') || localStorage.getItem('token');
+if (bootstrapToken) {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${bootstrapToken}`;
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

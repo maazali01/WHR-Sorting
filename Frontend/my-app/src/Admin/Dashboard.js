@@ -1,10 +1,8 @@
 // src/Admin/Dashboard.js
 import React, { useEffect, useState } from "react";
-import Loader from "../Loader/loader";
+import Cookie from "js-cookie";
 import "./Dashboard.css";
 import {
-  LineChart as ReLineChart,
-  Line,
   BarChart as ReBarChart,
   Bar,
   PieChart,
@@ -15,8 +13,14 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  AreaChart,
+  Area
 } from "recharts";
+import { 
+  FiPackage, FiShoppingCart, FiDollarSign, FiUsers, 
+  FiTrendingUp, FiActivity, FiAlertCircle 
+} from "react-icons/fi";
 
 const API_BASE = "http://localhost:4000/admin";
 
@@ -24,100 +28,260 @@ const Dashboard = () => {
   const [analytics, setAnalytics] = useState(null);
   const [recentOrders, setRecentOrders] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingStates, setLoadingStates] = useState({
+    kpis: true,
+    charts: true,
+    tables: true
+  });
   const [warn, setWarn] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
-    async function loadData() {
-      setLoading(true);
+    
+    const loadData = async () => {
       setWarn(null);
+
+      const token = Cookie.get("token");
+      if (!token) {
+        setWarn("Unauthorized: admin token not found. Please login.");
+        setLoadingStates({ kpis: false, charts: false, tables: false });
+        return;
+      }
+
       try {
-        const resA = await fetch(`${API_BASE}/analytics`, {
-          credentials: "include",
-        });
-        if (!resA.ok) throw new Error("analytics endpoint not available");
-        const analyticsData = await resA.json();
+        const headers = { Authorization: `Bearer ${token}` };
 
-        const resO = await fetch(`${API_BASE}/orders?limit=6`, {
-          credentials: "include",
-        });
-        const orders = resO.ok ? await resO.json() : [];
+        // ✅ Fetch all data in parallel for faster loading
+        const [analyticsRes, ordersRes, productsRes] = await Promise.all([
+          fetch(`${API_BASE}/analytics`, { credentials: "include", headers }),
+          fetch(`${API_BASE}/orders?limit=6`, { credentials: "include", headers }),
+          fetch(`${API_BASE}/top-products?limit=6`, { credentials: "include", headers })
+        ]);
 
-        const resP = await fetch(`${API_BASE}/top-products?limit=6`, {
-          credentials: "include",
-        });
-        const top = resP.ok ? await resP.json() : [];
+        if (!analyticsRes.ok) {
+          if (analyticsRes.status === 401) throw new Error("Unauthorized");
+          throw new Error("analytics endpoint not available");
+        }
+
+        const [analyticsData, orders, top] = await Promise.all([
+          analyticsRes.json(),
+          ordersRes.ok ? ordersRes.json() : [],
+          productsRes.ok ? productsRes.json() : []
+        ]);
 
         if (!cancelled) {
           setAnalytics(analyticsData);
           setRecentOrders(orders);
           setTopProducts(top);
+
+          // ✅ Faster progressive loading - reduced delays
+          setTimeout(() => setLoadingStates(prev => ({ ...prev, kpis: false })), 100);
+          setTimeout(() => setLoadingStates(prev => ({ ...prev, charts: false })), 200);
+          setTimeout(() => setLoadingStates(prev => ({ ...prev, tables: false })), 300);
         }
       } catch (e) {
         console.error("Dashboard fetch error:", e);
-        setWarn("⚠ Backend not reachable.");
-      } finally {
-        if (!cancelled) setLoading(false);
+        if (String(e).toLowerCase().includes("unauthorized")) {
+          setWarn("Unauthorized: invalid or expired admin token. Please login.");
+        } else {
+          setWarn("⚠ Backend not reachable.");
+        }
+        setLoadingStates({ kpis: false, charts: false, tables: false });
       }
-    }
+    };
+
     loadData();
     return () => { cancelled = true; };
   }, []);
 
-  if (!analytics) return <div className="dashboard-wrap"><Loader /></div>;
-
-  const data = analytics;
-
   return (
     <div className="dashboard-wrap">
+      {/* Header - Always visible */}
       <header className="dashboard-header">
-        <h1>Admin Analytics</h1>
-        <p className="sub">Overview — Key Metrics & Recent Activity</p>
+        <div className="header-content">
+          <div className="header-icon">
+            <FiActivity />
+          </div>
+          <div className="header-text">
+            <h1>Dashboard Overview</h1>
+            <p>Real-time insights into your warehouse operations and key metrics</p>
+          </div>
+        </div>
       </header>
 
-      {warn && <div className="warn">{warn}</div>}
+      {/* Warning Banner */}
+      {warn && (
+        <div className="warning-banner">
+          <FiAlertCircle />
+          <span>{warn}</span>
+        </div>
+      )}
 
-      <section className="kpi-row">
-        <KpiCard title="Total Products" value={data.productsCount} />
-        <KpiCard title="Total Orders" value={data.ordersCount} />
-        <KpiCard title="Revenue" value={formatCurrency(data.revenue)} />
-        <KpiCard title="Active Users" value={data.activeUsers} />
+      {/* KPI Cards - Progressive load */}
+      <section className="kpi-grid">
+        {loadingStates.kpis ? (
+          <div className="loading-section">
+            <div className="loading-text">Loading statistics...</div>
+          </div>
+        ) : analytics ? (
+          <>
+            <KPICard 
+              icon={<FiPackage />}
+              title="Total Products"
+              value={analytics.productsCount}
+              color="#667eea"
+            />
+            <KPICard 
+              icon={<FiShoppingCart />}
+              title="Total Orders"
+              value={analytics.ordersCount}
+              color="#f093fb"
+            />
+            <KPICard 
+              icon={<FiDollarSign />}
+              title="Revenue"
+              value={formatCurrency(analytics.revenue)}
+              color="#43e97b"
+            />
+            <KPICard 
+              icon={<FiUsers />}
+              title="Active Users"
+              value={analytics.activeUsers}
+              color="#4facfe"
+            />
+          </>
+        ) : null}
       </section>
 
-      <section className="charts-row">
-        <div className="card chart-card">
-          <h3>Revenue Trend (7 days)</h3>
-          <RevenueLineChart data={data.revenueTrend} />
+      {/* Charts Grid - Progressive load */}
+      {loadingStates.charts ? (
+        <div className="loading-section">
+          <div className="loading-text">Loading charts...</div>
         </div>
-        <div className="card chart-card">
-          <h3>Orders by Category</h3>
-          <OrdersBarChart data={data.ordersByCategory} />
-        </div>
-        <div className="card chart-card">
-          <h3>Product Distribution</h3>
-          <DonutChart data={data.productsByCategory} />
-        </div>
-      </section>
+      ) : analytics ? (
+        <section className="charts-grid">
+          {/* Revenue Trend */}
+          <div className="chart-card">
+            <div className="chart-header">
+              <h3>Revenue Trend (Last 7 Days)</h3>
+            </div>
+            <ResponsiveContainer width="100%" height={280}>
+              <AreaChart data={analytics.revenueTrend}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#667eea" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#667eea" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <XAxis dataKey="day" stroke="#8b92a8" />
+                <YAxis stroke="#8b92a8" />
+                <Tooltip 
+                  contentStyle={{ background: 'rgba(26, 26, 46, 0.95)', border: '1px solid rgba(102, 126, 234, 0.2)', borderRadius: '8px', color: '#e0e3eb' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="#667eea" 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#colorRevenue)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
 
-      <section className="lists-row">
-        <div className="card list-card">
-          <h3>Recent Orders</h3>
-          <RecentOrdersTable orders={recentOrders} loading={loading} />
+          {/* Orders by Category */}
+          <div className="chart-card">
+            <div className="chart-header">
+              <h3>Orders by Category</h3>
+            </div>
+            <ResponsiveContainer width="100%" height={280}>
+              <ReBarChart data={Object.entries(analytics.ordersByCategory).map(([name, value]) => ({ name, value }))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <XAxis dataKey="name" stroke="#8b92a8" />
+                <YAxis stroke="#8b92a8" />
+                <Tooltip 
+                  contentStyle={{ background: 'rgba(26, 26, 46, 0.95)', border: '1px solid rgba(102, 126, 234, 0.2)', borderRadius: '8px', color: '#e0e3eb' }}
+                />
+                <Bar dataKey="value" fill="#10b981" radius={[8, 8, 0, 0]} />
+              </ReBarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Product Distribution */}
+          <div className="chart-card full-width">
+            <div className="chart-header">
+              <h3>Product Distribution by Category</h3>
+            </div>
+            <ResponsiveContainer width="100%" height={280}>
+              <PieChart>
+                <Pie 
+                  data={Object.entries(analytics.productsByCategory).map(([name, value]) => ({ name, value }))} 
+                  dataKey="value" 
+                  nameKey="name" 
+                  cx="50%" 
+                  cy="50%" 
+                  outerRadius={90}
+                  innerRadius={50}
+                  label
+                >
+                  {Object.entries(analytics.productsByCategory).map((entry, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ background: 'rgba(26, 26, 46, 0.95)', border: '1px solid rgba(102, 126, 234, 0.2)', borderRadius: '8px', color: '#e0e3eb' }} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Data Tables Section - Progressive load */}
+      {loadingStates.tables ? (
+        <div className="loading-section">
+          <div className="loading-text">Loading tables...</div>
         </div>
-        <div className="card list-card">
-          <h3>Top Products</h3>
-          <TopProductsList items={topProducts} />
-        </div>
-      </section>
+      ) : (
+        <section className="data-section">
+          {/* Recent Orders */}
+          <div className="data-card">
+            <div className="section-header">
+              <FiShoppingCart className="section-icon" />
+              <h2>Recent Orders</h2>
+              <span className="data-count">{recentOrders.length}</span>
+            </div>
+            <RecentOrdersTable orders={recentOrders} />
+          </div>
+
+          {/* Top Products */}
+          <div className="data-card">
+            <div className="section-header">
+              <FiTrendingUp className="section-icon" />
+              <h2>Top Selling Products</h2>
+              <span className="data-count">{topProducts.length}</span>
+            </div>
+            <TopProductsList items={topProducts} />
+          </div>
+        </section>
+      )}
     </div>
   );
 };
 
-const KpiCard = ({ title, value }) => (
+// KPI Card Component
+const KPICard = ({ icon, title, value, color }) => (
   <div className="kpi-card">
-    <div className="kpi-title">{title}</div>
-    <div className="kpi-value">{value}</div>
+    <div className="kpi-icon" style={{ background: `linear-gradient(135deg, ${color} 0%, ${color}dd 100%)` }}>
+      {icon}
+    </div>
+    <div className="kpi-content">
+      <div className="kpi-info">
+        <div className="kpi-title">{title}</div>
+        <div className="kpi-value">{value}</div>
+      </div>
+    </div>
   </div>
 );
 
@@ -126,91 +290,84 @@ const formatCurrency = (n) =>
     ? n.toLocaleString(undefined, { style: "currency", currency: "USD" })
     : n;
 
-const RevenueLineChart = ({ data }) => (
-  <ResponsiveContainer width="100%" height={250}>
-    <ReLineChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="day" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="value" stroke="#6366F1" strokeWidth={2} />
-    </ReLineChart>
-  </ResponsiveContainer>
-);
+const RecentOrdersTable = ({ orders }) => {
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric'
+      });
+    } catch {
+      return dateString;
+    }
+  };
 
-const OrdersBarChart = ({ data }) => {
-  const formatted = Object.entries(data).map(([name, value]) => ({ name, value }));
   return (
-    <ResponsiveContainer width="100%" height={250}>
-      <ReBarChart data={formatted}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="value" fill="#31C48D" radius={[6, 6, 0, 0]} />
-      </ReBarChart>
-    </ResponsiveContainer>
-  );
-};
-
-const DonutChart = ({ data }) => {
-  const formatted = Object.entries(data).map(([name, value]) => ({ name, value }));
-  const colors = ["#31C48D", "#6366F1", "#F59E0B", "#EF4444"];
-  return (
-    <ResponsiveContainer width="100%" height={250}>
-      <PieChart>
-        <Pie data={formatted} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} innerRadius={60} label>
-          {formatted.map((entry, index) => (
-            <Cell key={index} fill={colors[index % colors.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
-    </ResponsiveContainer>
-  );
-};
-
-const RecentOrdersTable = ({ orders, loading }) => (
-  <div className="orders-table">
-    {loading ? (
-      <p>Loading...</p>
-    ) : (
+    <div className="orders-table">
       <table>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Order ID</th>
             <th>Total</th>
             <th>Status</th>
             <th>Date</th>
           </tr>
         </thead>
         <tbody>
-          {orders.map((o) => (
-            <tr key={o._id}>
-              <td>{o._id}</td>
-              <td>{formatCurrency(o.total)}</td>
-              <td><span className={`status ${o.status.toLowerCase()}`}>{o.status}</span></td>
-              <td>{o.date}</td>
+          {orders.length === 0 ? (
+            <tr>
+              <td colSpan="4" style={{ textAlign: 'center', padding: '40px', color: '#9ca3af' }}>
+                No recent orders found.
+              </td>
             </tr>
-          ))}
+          ) : (
+            orders.map((o, index) => {
+              const orderId = o.orderId || o._id || o.id || `Order-${index + 1}`;
+              const statusValue = (o.status || 'pending').toLowerCase().trim();
+              
+              return (
+                <tr key={o._id || o.id || index}>
+                  <td>{orderId}</td>
+                  <td>{o.total != null ? formatCurrency(o.total) : 'N/A'}</td>
+                  <td>
+                    <span className={`status ${statusValue}`}>
+                      {o.status || 'Pending'}
+                    </span>
+                  </td>
+                  <td>{formatDate(o.date || o.createdAt)}</td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
-    )}
-  </div>
-);
+    </div>
+  );
+};
 
 const TopProductsList = ({ items }) => (
   <ul className="top-products">
-    {items.map((p, i) => (
-      <li key={p._id}>
-        <span>{i + 1}. {p.name}</span>
-        <span className="sold">{p.sold} sold</span>
+    {items.length === 0 ? (
+      <li className="empty-state">
+        <span>No products data available</span>
       </li>
-    ))}
+    ) : (
+      items.map((p, i) => (
+        <li key={p._id}>
+          <div className="product-name">
+            <span className="product-rank">{i + 1}</span>
+            <span>{p.name}</span>
+          </div>
+          <span className="sold">{p.sold} sold</span>
+        </li>
+      ))
+    )}
   </ul>
 );
+
+const COLORS = ["#667eea", "#10b981", "#f59e0b", "#ef4444", "#06b6d4", "#8b5cf6"];
 
 export default Dashboard;
