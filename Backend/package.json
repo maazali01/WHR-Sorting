@@ -2,6 +2,13 @@
   "name": "whr-sorting-backend",
   "version": "1.0.0",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "adm-zip": "^0.5.16",
     "bcryptjs": "^3.0.2",
@@ -20,12 +27,5 @@
     "passport-google-oauth20": "^2.0.0",
     "react-router-dom": "^7.5.3",
     "ws": "^8.18.3"
-  },
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "engines": {
-    "node": "18.x"
   }
 }
