@@ -7,9 +7,8 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const session = require("express-session");
-const path = require("path");
 
-require("./config/passport"); // ✅ Load passport config
+require("./config/passport");
 
 const app = express();
 
@@ -21,13 +20,12 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// ✅ Passport + Session (needed for Google OAuth)
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "keyboard cat",
@@ -39,20 +37,36 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ---------------- MongoDB ----------------
+let isConnected = false;
+
 const connectDB = async () => {
+  if (isConnected) {
+    console.log("✅ Using existing MongoDB connection");
+    return;
+  }
+
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      serverSelectionTimeoutMS: 5000,
+      bufferCommands: false,
     });
+    isConnected = true;
     console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ MongoDB connection error:", err.message);
-    console.error("Retrying in 5 seconds...");
-    setTimeout(connectDB, 5000);
+    throw err;
   }
 };
 
-connectDB();
+// ✅ Connect before handling any request (important for serverless)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
 
 // ---------------- Routes ----------------
 const { authMiddleware, adminMiddleware } = require("./middleware/authmiddleware");
@@ -62,38 +76,39 @@ const adminSideRoutes = require("./routes/adminSide");
 const authRoutes = require("./routes/auth");
 const dashboardRoutes = require("./routes/dashboard");
 const adminOrdersRoutes = require("./routes/orders");
-const googleAuthRoutes = require("./routes/googleAuth"); // ✅ added
+const googleAuthRoutes = require("./routes/googleAuth");
 const userManagementRoutes = require("./routes/userManagement");
 const logsRoutes = require("./routes/logs");
-const analyticsRoutes = require("./routes/analytics"); // ✅ added
-const webotsRoutes = require("./routes/webots"); // ✅ Add this import
-const aiModelsRoutes = require("./routes/aiModels"); // ✅ Add this import
-const webotsEnvironmentRoutes = require("./routes/webotsEnvironment"); // ✅ Add this import
-// Public
+const analyticsRoutes = require("./routes/analytics");
+
+// Public routes
 app.use("/", authRoutes);
-app.use("/auth", googleAuthRoutes); // ✅ Google OAuth entry
+app.use("/auth", googleAuthRoutes);
 
-// User routes (products should be accessible without full admin auth)
+// User routes
 app.use("/user/products", userSideRoutes);
-app.use("/user", userSideRoutes); // ✅ mount same router at /user for profile/orders endpoints
+app.use("/user", userSideRoutes);
 
-// Admin routes (protected)
+// Admin routes
 app.use("/admin", authMiddleware, adminMiddleware, adminSideRoutes);
 app.use("/admin", authMiddleware, adminMiddleware, dashboardRoutes);
-// mount orders under /admin/orders (history + pending + actions)
 app.use("/admin/orders", authMiddleware, adminMiddleware, adminOrdersRoutes);
 app.use("/admin", authMiddleware, adminMiddleware, userManagementRoutes);
 app.use("/admin", authMiddleware, adminMiddleware, logsRoutes);
-app.use("/admin", authMiddleware, adminMiddleware, analyticsRoutes); // ✅ added
-app.use("/admin/ai-models", authMiddleware, adminMiddleware, aiModelsRoutes); // ✅ Mount AI Models routes at /admin/ai-models
-app.use("/webots", authMiddleware, adminMiddleware, webotsRoutes); // ✅ Mount Webots routes at /webots
-app.use("/admin/webots-env", authMiddleware, adminMiddleware, webotsEnvironmentRoutes); // ✅ Mount Webots Environment routes at /admin/webots-env
+app.use("/admin", authMiddleware, adminMiddleware, analyticsRoutes);
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", message: "Server is running" });
+});
+
 // ---------------- Start Server ----------------
 const PORT = process.env.PORT || 4000;
 
-// ✅ Export app for Vercel serverless
-if (process.env.NODE_ENV !== 'production') {
+// ✅ Only listen when not in serverless environment
+if (process.env.VERCEL !== "1") {
   app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 }
 
+// ✅ Export for Vercel
 module.exports = app;
