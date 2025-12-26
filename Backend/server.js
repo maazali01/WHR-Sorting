@@ -81,6 +81,41 @@ const userManagementRoutes = require("./routes/userManagement");
 const logsRoutes = require("./routes/logs");
 const analyticsRoutes = require("./routes/analytics");
 
+// ✅ Root route with HTML response
+app.get("/", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>WHR-Sorting Backend</title>
+      <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        h1 { color: #667eea; }
+        .endpoint { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .status { color: #10b981; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <h1>🤖 WHR-Sorting Backend API</h1>
+      <p class="status">✅ Status: Running</p>
+      <h2>Available Endpoints:</h2>
+      <div class="endpoint">GET /health - Health check</div>
+      <div class="endpoint">POST /login - User login</div>
+      <div class="endpoint">POST /signup - User registration</div>
+      <div class="endpoint">POST /admin/login - Admin login</div>
+      <div class="endpoint">GET /auth/google - Google OAuth</div>
+      <div class="endpoint">GET /user/products - Get products</div>
+      <div class="endpoint">GET /admin/* - Admin routes (protected)</div>
+    </body>
+    </html>
+  `);
+});
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", message: "Server is running" });
+});
+
 // Public routes
 app.use("/", authRoutes);
 app.use("/auth", googleAuthRoutes);
@@ -96,11 +131,6 @@ app.use("/admin/orders", authMiddleware, adminMiddleware, adminOrdersRoutes);
 app.use("/admin", authMiddleware, adminMiddleware, userManagementRoutes);
 app.use("/admin", authMiddleware, adminMiddleware, logsRoutes);
 app.use("/admin", authMiddleware, adminMiddleware, analyticsRoutes);
-
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", message: "Server is running" });
-});
 
 // ---------------- Start Server ----------------
 const PORT = process.env.PORT || 4000;
