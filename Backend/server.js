@@ -90,4 +90,10 @@ app.use("/webots", authMiddleware, adminMiddleware, webotsRoutes); // ✅ Mount 
 app.use("/admin/webots-env", authMiddleware, adminMiddleware, webotsEnvironmentRoutes); // ✅ Mount Webots Environment routes at /admin/webots-env
 // ---------------- Start Server ----------------
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+// ✅ Export app for Vercel serverless
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+}
+
+module.exports = app;
